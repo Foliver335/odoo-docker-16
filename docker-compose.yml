@@ -37,4 +37,4 @@ services:
       - ./addons:/mnt/extra-addons
       - ./filestore:/var/lib/odoo
       - ./config:/etc/odoo
-    command: ["--dev=reload"]
+    # command: ["--dev=reload"]
