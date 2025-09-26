@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_finance_fiscal_document_user,finance.fiscal.document.user,model_finance_fiscal_document,nvt_fiscal.group_fiscal_user,1,1,1,0
+access_finance_fiscal_document_manager,finance.fiscal.document.manager,model_finance_fiscal_document,nvt_fiscal.group_fiscal_manager,1,1,1,1
+access_finance_fiscal_document_read_all,finance.fiscal.document.read_all,model_finance_fiscal_document,base.group_user,1,0,0,0

@@ -1,0 +1,54 @@
+<odoo>
+  <!-- TEMPLATE QWEB -->
+  <template id="report_danfe">
+    <t t-foreach="docs" t-as="doc">
+      <t t-call="web.external_layout">
+        <div class="page">
+          <h2>DANFE (Dummy)</h2>
+          <p><strong>Number:</strong> <t t-esc="doc.name"/></p>
+          <p><strong>Partner:</strong> <t t-esc="doc.partner_id.display_name"/></p>
+          <p><strong>Issue Date:</strong> <t t-esc="doc.issue_date"/></p>
+
+          <table class="table table-sm o_main_table" style="width:100%; margin-top:8px;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Unit</th>
+                <th>Subtotal</th>
+                <th>Tax</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="doc.line_ids" t-as="l">
+                <tr>
+                  <td><t t-esc="l.sequence"/></td>
+                  <td><t t-esc="l.name"/></td>
+                  <td><t t-esc="l.quantity"/></td>
+                  <td><t t-esc="l.price_unit"/></td>
+                  <td><t t-esc="l.price_subtotal"/></td>
+                  <td><t t-esc="l.tax_amount"/></td>
+                </tr>
+              </t>
+            </tbody>
+          </table>
+
+          <h3 style="text-align:right; margin-top:8px;">
+            Total: <t t-esc="doc.amount_total"/>
+          </h3>
+        </div>
+      </t>
+    </t>
+  </template>
+
+  <!-- AÇÃO DO RELATÓRIO -->
+  <report
+      id="action_report_danfe"
+      model="finance.fiscal.document"
+      string="DANFE (Dummy)"
+      report_type="qweb-pdf"
+      name="nvt_fiscal.report_danfe"
+      file="nvt_fiscal.report_danfe"
+      print_report_name="'DANFE_' + (object.name or 'document')"/>
+</odoo>

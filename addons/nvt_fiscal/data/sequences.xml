@@ -1,0 +1,10 @@
+<odoo>
+  <data noupdate="1">
+    <record id="seq_fiscal_document" model="ir.sequence">
+      <field name="name">Fiscal Document</field>
+      <field name="code">finance.fiscal.document</field>
+      <field name="prefix">NFe/%(year)s/</field>
+      <field name="padding">8</field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,10 @@
+<odoo>
+  <report
+      id="action_report_danfe"
+      model="finance.fiscal.document"
+      string="DANFE (Dummy)"
+      report_type="qweb-pdf"
+      name="nvt_fiscal.report_danfe"
+      file="nvt_fiscal.report_danfe"
+      print_report_name="'DANFE_'+(object.name or 'document')"/>
+</odoo>

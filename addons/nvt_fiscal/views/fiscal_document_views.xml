@@ -1,0 +1,128 @@
+<odoo>
+  <!-- ROOT do app (aparece para todo usuário interno) -->
+  <menuitem id="menu_fiscal_root" name="Fiscal" sequence="20" groups="base.group_user"/>
+
+  <!-- Overview público (garante que o app aparece para todos) -->
+  <record id="action_fiscal_overview" model="ir.actions.client">
+    <field name="name">Fiscal Overview</field>
+    <field name="tag">display_notification</field>
+    <field name="params">
+      {"title": "Fiscal", "message": "Bem-vindo ao módulo Fiscal", "type": "info"}
+    </field>
+  </record>
+  <menuitem id="menu_fiscal_overview"
+            name="Overview"
+            parent="menu_fiscal_root"
+            action="action_fiscal_overview"
+            sequence="1"
+            groups="base.group_user"/>
+
+  <!-- Ação da lista de documentos (com help) -->
+  <record id="action_fiscal_documents" model="ir.actions.act_window">
+    <field name="name">Fiscal Documents</field>
+    <field name="res_model">finance.fiscal.document</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+    <field name="help" type="html">
+      <p>Nenhum documento fiscal encontrado ainda.</p>
+      <p t-if="env.user.has_group('nvt_fiscal.group_fiscal_user') or env.user.has_group('nvt_fiscal.group_fiscal_manager')">
+        Clique em <b>Criar</b> para adicionar seu primeiro documento fiscal.
+      </p>
+      <p t-else="">
+        Você não tem permissão para criar. Solicite acesso ao administrador.
+      </p>
+    </field>
+    </field>
+  </record>
+
+  <!-- Submenu "Documents" (deixe público para internos; se quiser, restrinja ao grupo fiscal) -->
+  <menuitem id="menu_fiscal_documents"
+            name="Documents"
+            parent="menu_fiscal_root"
+            action="action_fiscal_documents"
+            sequence="10"
+            groups="base.group_user"/>
+
+  <!-- VIEW: Tree -->
+  <record id="view_fiscal_document_tree" model="ir.ui.view">
+    <field name="name">finance.fiscal.document.tree</field>
+    <field name="model">finance.fiscal.document</field>
+    <field name="arch" type="xml">
+      <tree create="true" edit="true" delete="false">
+        <field name="name"/>
+        <field name="state"/>
+        <field name="partner_id"/>
+        <field name="issue_date"/>
+        <field name="amount_total"/>
+        <field name="sefaz_status"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- VIEW: Form -->
+  <record id="view_fiscal_document_form" model="ir.ui.view">
+    <field name="name">finance.fiscal.document.form</field>
+    <field name="model">finance.fiscal.document</field>
+    <field name="arch" type="xml">
+      <form string="Fiscal Document" create="true" edit="true" delete="false">
+        <header>
+          <button name="action_validate" type="object" string="Validate" class="oe_highlight" states="draft"/>
+          <button name="action_generate_xml" type="object" string="Generate XML" states="validated,draft"/>
+          <button name="action_transmit" type="object" string="Transmit" class="oe_highlight" states="validated,transmitted,denied"/>
+          <button name="action_cancel" type="object" string="Cancel" states="authorized,validated,transmitted" special="cancel"/>
+          <button name="action_inutilize" type="object" string="Inutilize" states="draft,validated"/>
+          <button name="action_print_danfe" type="object" string="Print DANFE" states="authorized"/>
+          <field name="state" widget="statusbar" statusbar_visible="draft,validated,transmitted,authorized,denied,canceled"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="name" readonly="1"/>
+              <field name="operation_type"/>
+              <field name="partner_id" options="{'no_create': True}"/>
+              <field name="issue_date"/>
+            </group>
+            <group>
+              <field name="document_key" readonly="1"/>
+              <field name="protocol_number" readonly="1"/>
+              <field name="sefaz_status" readonly="1"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Lines">
+              <field name="line_ids">
+                <tree editable="bottom">
+                  <field name="sequence"/>
+                  <field name="product_id"/>
+                  <field name="name"/>
+                  <field name="quantity"/>
+                  <field name="price_unit"/>
+                  <field name="tax_percent"/>
+                  <field name="price_subtotal" readonly="1"/>
+                  <field name="tax_amount" readonly="1"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Totals">
+              <group>
+                <field name="amount_untaxed" readonly="1"/>
+                <field name="amount_tax" readonly="1"/>
+                <field name="amount_total" readonly="1"/>
+              </group>
+            </page>
+            <page string="Files">
+              <group>
+                <field name="xml_file" filename="xml_filename"/>
+                <field name="xml_filename" readonly="1"/>
+                <field name="pdf_file" filename="pdf_filename"/>
+                <field name="pdf_filename" readonly="1"/>
+              </group>
+            </page>
+            <page string="Log">
+              <field name="last_message" nolabel="1" readonly="1"/>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

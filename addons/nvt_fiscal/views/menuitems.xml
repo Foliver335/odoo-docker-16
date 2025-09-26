@@ -1,0 +1,22 @@
+<odoo>
+  <menuitem id="menu_fiscal_root" name="Fiscal" sequence="20" groups="base.group_user"/>
+  <menuitem id="menu_fiscal_documents" name="Documents" parent="menu_fiscal_root" sequence="10"/>
+  <menuitem id="menu_fiscal_configuration" name="Configuration" parent="menu_fiscal_root" sequence="90" groups="nvt_fiscal.group_fiscal_manager"/>
+
+  <record id="action_fiscal_documents" model="ir.actions.act_window">
+    <field name="name">Fiscal Documents</field>
+    <field name="res_model">finance.fiscal.document</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+  </record>
+
+  <menuitem id="menu_fiscal_documents_action" parent="menu_fiscal_documents" action="action_fiscal_documents" sequence="10"/>
+
+  <record id="action_fiscal_settings" model="ir.actions.act_window">
+    <field name="name">Fiscal Settings</field>
+    <field name="res_model">res.config.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+  </record>
+
+  <menuitem id="menu_fiscal_settings" parent="menu_fiscal_configuration" action="action_fiscal_settings" sequence="10"/>
+</odoo>

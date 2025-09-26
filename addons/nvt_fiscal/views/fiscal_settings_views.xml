@@ -1,0 +1,58 @@
+<odoo>
+  <!-- Action para abrir res.config.settings (módulo Fiscal) -->
+  <record id="action_fiscal_settings" model="ir.actions.act_window">
+    <field name="name">Fiscal Settings</field>
+    <field name="res_model">res.config.settings</field>
+    <field name="view_mode">form</field>
+  </record>
+
+  <!-- Submenu de configuração (só Manager) -->
+  <menuitem id="menu_fiscal_configuration"
+            name="Configuration"
+            parent="menu_fiscal_root"
+            action="action_fiscal_settings"
+            sequence="90"
+            groups="nvt_fiscal.group_fiscal_manager"/>
+
+  <!-- Herança da tela de Configurações (Odoo 16) -->
+  <record id="view_res_config_settings_fiscal" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.fiscal</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//div[hasclass('settings')]" position="inside">
+        <div class="app_settings_block" string="Fiscal">
+          <h2>Fiscal Settings</h2>
+
+          <group>
+            <field name="fiscal_environment"/>
+            <field name="fiscal_provider_code"/>
+          </group>
+
+          <group string="SEFAZ (NFe)">
+            <field name="sefaz_uf"/>
+            <field name="company_cnpj"/>
+            <field name="a1_certificate" filename="a1_certificate_filename"/>
+            <field name="a1_certificate_password" password="True"/>
+          </group>
+
+          <group string="NFS-e Brasília">
+            <field name="nfse_cmc"/>
+            <field name="nfse_login"/>
+            <field name="nfse_password" password="True"/>
+            <field name="nfse_municipality_code"/>
+          </group>
+
+          <group>
+            <field name="csc_id"/>
+            <field name="csc_token"/>
+          </group>
+
+          <group string="Certificado (ref interna)">
+            <field name="a1_certificate_attachment_id" readonly="1"/>
+          </group>
+        </div>
+      </xpath>
+    </field>
+  </record>
+</odoo>
