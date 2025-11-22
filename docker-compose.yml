@@ -1,8 +1,9 @@
+version: "3.1"
+
 services:
   db:
-    image: postgres:14
+    image: postgres:15
     container_name: odoo16-db
-    restart: unless-stopped
     env_file: .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -10,31 +11,25 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       TZ: ${TZ}
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data/pgdata
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - odoo-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   odoo:
     image: odoo:16.0
-    container_name: odoo16-web
     depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
-    env_file: .env
-    environment:
-      DB_HOST: db
-      DB_PORT: "5432"
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      TZ: ${TZ}
+      - db
     ports:
-      - "${ODOO_PORT}:8069"
+      - "8069:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
     volumes:
+      - odoo-web-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
-      - ./filestore:/var/lib/odoo
-      - ./config:/etc/odoo
-    # command: ["--dev=reload"]
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+    restart: unless-stopped
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:
